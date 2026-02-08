@@ -63,17 +63,25 @@ Time and Space Analysis for problem 2:
 # Output: [(1, 4), (2, 3)]
 
 def find_pairs(nums, target):
-    # Your code here
-    pass
+    seen = set()
+    pairs = []
+    
+    for num in nums:
+        complement = target - num
+        if complement in seen:
+            pairs.append((min(num, complement), max(num, complement)))
+        seen.add(num)
+    
+    return pairs
 
 """
 Time and Space Analysis for problem 3:
-- Best-case:
-- Worst-case:
-- Average-case:
-- Space complexity:
-- Why this approach?
-- Could it be optimized?
+- Best-case: O(n) - must examine all elements even if no pairs exist
+- Worst-case: O(n) - iterate through entire list
+- Average-case: O(n) - independent of pair count
+- Space complexity: O(n) - seen set stores up to n unique elements
+- Why this approach? By checking if complement is in `seen`, we ensure each pair is added exactly once without duplicates.
+- Could it be optimized? O(n) is optimal since we must examine each element. Space can't be reduced if we want to collect all pairs.
 """
 
 
@@ -86,16 +94,27 @@ Time and Space Analysis for problem 3:
 # add_n_items(6) → should print when resizing happens.
 
 def add_n_items(n):
-    # Your code here
-    pass
+    capacity = 2  # Initial fixed capacity
+    items = []
+    
+    for i in range(n):
+        # Check if we need to resize
+        if len(items) == capacity:
+            print(f"Resizing: capacity {capacity} -> {capacity * 2}, copying {len(items)} items")
+            capacity *= 2
+        
+        items.append(i)
+    
+    print(f"Final: {len(items)} items in list with capacity {capacity}")
+    return items
 
 """
 Time and Space Analysis for problem 4:
-- When do resizes happen?
-- What is the worst-case for a single append?
-- What is the amortized time per append overall?
-- Space complexity:
-- Why does doubling reduce the cost overall?
+- When do resizes happen? Resizes occur at positions 2, 4, 8, 16, ... (powers of 2)
+- What is the worst-case for a single append? When a resize occurs, meaning it must copy all n-1 existing items.
+- What is the amortized time per append overall? Total work for n appends is O(n), so average per append is O(1)
+- Space complexity: Capacity grows to accommodate n items
+- Why does doubling reduce the cost overall? Doubling amortizes the cost by spreading it. Each resize at size k costs k work but enables k more O(1) appends.
 """
 
 
@@ -109,15 +128,98 @@ Time and Space Analysis for problem 4:
 # Because: [1, 1+2, 1+2+3, 1+2+3+4]
 
 def running_total(nums):
-    # Your code here
-    pass
+    result = []
+    total = 0
+    for num in nums:
+        total += num
+        result.append(total)
+    return result
 
 """
 Time and Space Analysis for problem 5:
-- Best-case:
-- Worst-case:
-- Average-case:
-- Space complexity:
-- Why this approach?
-- Could it be optimized?
+- Best-case: O(n) - must iterate through all elements
+- Worst-case: O(n) - always iterate through entire list
+- Average-case: O(n) - no variance, always linear
+- Space complexity: O(n) - output list stores n cumulative sums
+- Why this approach? Single pass with O(1) work per element is optimal. Maintains running total to avoid redundant recalculation.
+- Could it be optimized? O(n) is optimal since we must process each element. Output space is inevitable to store results.
 """
+
+
+# TEST CASES
+
+def run_tests():
+    print("PROBLEM 1: Find Most Frequent Element")
+    
+    # Test 1.1: Example from problem
+    result = most_frequent([1, 3, 2, 3, 4, 1, 3])
+    assert result == 3, f"Expected 3, got {result}"
+    print("✓ Test 1.1 passed: [1, 3, 2, 3, 4, 1, 3] → 3")
+    
+    # Test 1.2: Single element
+    result = most_frequent([5])
+    assert result == 5, f"Expected 5, got {result}"
+    print("✓ Test 1.2 passed: [5] → 5")
+    
+    print()
+    print("PROBLEM 2: Remove Duplicates While Preserving Order")
+    
+    # Test 2.1: Example from problem
+    result = remove_duplicates([4, 5, 4, 6, 5, 7])
+    assert result == [4, 5, 6, 7], f"Expected [4, 5, 6, 7], got {result}"
+    print("✓ Test 2.1 passed: [4, 5, 4, 6, 5, 7] → [4, 5, 6, 7]")
+    
+    # Test 2.2: No duplicates
+    result = remove_duplicates([1, 2, 3])
+    assert result == [1, 2, 3], f"Expected [1, 2, 3], got {result}"
+    print("✓ Test 2.2 passed: [1, 2, 3] → [1, 2, 3]")
+    
+    print()
+    print("PROBLEM 3: Return All Pairs That Sum to Target")
+    
+    # Test 3.1: Example from problem
+    result = find_pairs([1, 2, 3, 4], 5)
+    result_set = set(result)
+    expected_set = {(1, 4), (2, 3)}
+    assert result_set == expected_set, f"Expected {expected_set}, got {result_set}"
+    print("✓ Test 3.1 passed: find_pairs([1, 2, 3, 4], 5) → {(1, 4), (2, 3)}")
+    
+    # Test 3.2: No pairs
+    result = find_pairs([1, 2, 3], 10)
+    assert result == [], f"Expected [], got {result}"
+    print("✓ Test 3.2 passed: find_pairs([1, 2, 3], 10) → []")
+    
+    print()
+    print("PROBLEM 4: Simulate List Resizing (Amortized Cost)")
+    
+    # Test 4.1: Example from problem (n=6)
+    print("Test 4.1: add_n_items(6)")
+    result = add_n_items(6)
+    assert result == [0, 1, 2, 3, 4, 5], f"Expected [0, 1, 2, 3, 4, 5], got {result}"
+    print("✓ Test 4.1 passed: Correct items added")
+    
+    # Test 4.2: Zero items
+    print("\nTest 4.2: add_n_items(0)")
+    result = add_n_items(0)
+    assert result == [], f"Expected [], got {result}"
+    print("✓ Test 4.2 passed: Correct items added")
+    
+    print()
+    print("PROBLEM 5: Compute Running Totals")
+    
+    # Test 5.1: Example from problem
+    result = running_total([1, 2, 3, 4])
+    assert result == [1, 3, 6, 10], f"Expected [1, 3, 6, 10], got {result}"
+    print("✓ Test 5.1 passed: [1, 2, 3, 4] → [1, 3, 6, 10]")
+    
+    # Test 5.2: Negative numbers
+    result = running_total([1, -2, 3, -1])
+    assert result == [1, -1, 2, 1], f"Expected [1, -1, 2, 1], got {result}"
+    print("✓ Test 5.2 passed: [1, -2, 3, -1] → [1, -1, 2, 1]")
+    
+    print()
+    print("ALL TESTS PASSED! ✓")
+
+
+if __name__ == "__main__":
+    run_tests()
