@@ -63,15 +63,31 @@ Time and Space Analysis for problem 2:
 # Output: [(1, 4), (2, 3)]
 
 def find_pairs(nums, target):
-    seen = set()
+    # Refactored approach: sort + two pointers.
+    # Trade-off: This uses O(n log n) time due to sorting but requires O(1)
+    # extra space (ignoring the cost of copying the input for safety).
+    # Original approach: O(n) time and O(n) extra space using a hash set.
+    
+    if not nums:
+        return []
+
+    # Work on a copy so we don't mutate the caller's list
+    arr = sorted(nums)
+    left, right = 0, len(arr) - 1
     pairs = []
-    
-    for num in nums:
-        complement = target - num
-        if complement in seen:
-            pairs.append((min(num, complement), max(num, complement)))
-        seen.add(num)
-    
+
+    # Two-pointer scan finds all unique pairs summing to target.
+    while left < right:
+        s = arr[left] + arr[right]
+        if s == target:
+            pairs.append((arr[left], arr[right]))
+            left += 1
+            right -= 1
+        elif s < target:
+            left += 1
+        else:
+            right -= 1
+
     return pairs
 
 """
@@ -154,12 +170,12 @@ def run_tests():
     # Test 1.1: Example from problem
     result = most_frequent([1, 3, 2, 3, 4, 1, 3])
     assert result == 3, f"Expected 3, got {result}"
-    print("✓ Test 1.1 passed: [1, 3, 2, 3, 4, 1, 3] → 3")
+    print("Test 1.1 passed: [1, 3, 2, 3, 4, 1, 3] → 3")
     
     # Test 1.2: Single element
     result = most_frequent([5])
     assert result == 5, f"Expected 5, got {result}"
-    print("✓ Test 1.2 passed: [5] → 5")
+    print("Test 1.2 passed: [5] → 5")
     
     print()
     print("PROBLEM 2: Remove Duplicates While Preserving Order")
@@ -167,12 +183,12 @@ def run_tests():
     # Test 2.1: Example from problem
     result = remove_duplicates([4, 5, 4, 6, 5, 7])
     assert result == [4, 5, 6, 7], f"Expected [4, 5, 6, 7], got {result}"
-    print("✓ Test 2.1 passed: [4, 5, 4, 6, 5, 7] → [4, 5, 6, 7]")
+    print("Test 2.1 passed: [4, 5, 4, 6, 5, 7] → [4, 5, 6, 7]")
     
     # Test 2.2: No duplicates
     result = remove_duplicates([1, 2, 3])
     assert result == [1, 2, 3], f"Expected [1, 2, 3], got {result}"
-    print("✓ Test 2.2 passed: [1, 2, 3] → [1, 2, 3]")
+    print("Test 2.2 passed: [1, 2, 3] → [1, 2, 3]")
     
     print()
     print("PROBLEM 3: Return All Pairs That Sum to Target")
@@ -182,12 +198,12 @@ def run_tests():
     result_set = set(result)
     expected_set = {(1, 4), (2, 3)}
     assert result_set == expected_set, f"Expected {expected_set}, got {result_set}"
-    print("✓ Test 3.1 passed: find_pairs([1, 2, 3, 4], 5) → {(1, 4), (2, 3)}")
+    print("Test 3.1 passed: find_pairs([1, 2, 3, 4], 5) → {(1, 4), (2, 3)}")
     
     # Test 3.2: No pairs
     result = find_pairs([1, 2, 3], 10)
     assert result == [], f"Expected [], got {result}"
-    print("✓ Test 3.2 passed: find_pairs([1, 2, 3], 10) → []")
+    print("Test 3.2 passed: find_pairs([1, 2, 3], 10) → []")
     
     print()
     print("PROBLEM 4: Simulate List Resizing (Amortized Cost)")
@@ -196,13 +212,13 @@ def run_tests():
     print("Test 4.1: add_n_items(6)")
     result = add_n_items(6)
     assert result == [0, 1, 2, 3, 4, 5], f"Expected [0, 1, 2, 3, 4, 5], got {result}"
-    print("✓ Test 4.1 passed: Correct items added")
+    print("Test 4.1 passed: Correct items added")
     
     # Test 4.2: Zero items
     print("\nTest 4.2: add_n_items(0)")
     result = add_n_items(0)
     assert result == [], f"Expected [], got {result}"
-    print("✓ Test 4.2 passed: Correct items added")
+    print("Test 4.2 passed: Correct items added")
     
     print()
     print("PROBLEM 5: Compute Running Totals")
@@ -210,15 +226,15 @@ def run_tests():
     # Test 5.1: Example from problem
     result = running_total([1, 2, 3, 4])
     assert result == [1, 3, 6, 10], f"Expected [1, 3, 6, 10], got {result}"
-    print("✓ Test 5.1 passed: [1, 2, 3, 4] → [1, 3, 6, 10]")
+    print("Test 5.1 passed: [1, 2, 3, 4] → [1, 3, 6, 10]")
     
     # Test 5.2: Negative numbers
     result = running_total([1, -2, 3, -1])
     assert result == [1, -1, 2, 1], f"Expected [1, -1, 2, 1], got {result}"
-    print("✓ Test 5.2 passed: [1, -2, 3, -1] → [1, -1, 2, 1]")
+    print("Test 5.2 passed: [1, -2, 3, -1] → [1, -1, 2, 1]")
     
     print()
-    print("ALL TESTS PASSED! ✓")
+    print("ALL TESTS PASSED!")
 
 
 if __name__ == "__main__":
