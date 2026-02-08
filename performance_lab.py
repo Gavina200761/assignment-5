@@ -7,17 +7,23 @@
 # Output: 3
 
 def most_frequent(numbers):
-    # Your code here
-    pass
+    if not numbers:
+        return None
+    
+    freq = {}
+    for num in numbers:
+        freq[num] = freq.get(num, 0) + 1
+    
+    return max(freq, key=freq.get)
 
 """
 Time and Space Analysis for problem 1:
-- Best-case:
-- Worst-case:
-- Average-case:
-- Space complexity:
-- Why this approach?
-- Could it be optimized?
+- Best-case: O(n) - iterate through all elements to count frequencies.
+- Worst-case: O(n) - pass through entire list
+- Average-case: O(n) - no variance and always linear
+- Space complexity: O(k) k is the number of unique elements
+- Why this approach? This is optimal because we  must examine each element at least once. This approach achieves that.
+- Could it be optimized? Space could be saved by tracking max during counting (one pass with O(1) extra space), but time remains O(n).
 """
 
 
@@ -29,17 +35,22 @@ Time and Space Analysis for problem 1:
 # Output: [4, 5, 6, 7]
 
 def remove_duplicates(nums):
-    # Your code here
-    pass
+    seen = set()
+    result = []
+    for num in nums:
+        if num not in seen:
+            seen.add(num)
+            result.append(num)
+    return result
 
 """
 Time and Space Analysis for problem 2:
-- Best-case:
-- Worst-case:
-- Average-case:
-- Space complexity:
-- Why this approach?
-- Could it be optimized?
+- Best-case: O(n) - iterate through all elements to ensure order
+- Worst-case: O(n) - same iteration through entire list
+- Average-case: O(n) - linear regardless of duplicate
+- Space complexity: O(n) - worst case when all elements are unique
+- Why this approach? Using a set provides O(1) lookup time for duplicates. We must examine each element to preserve order, making O(n) optimal.
+- Could it be optimized? Space is necessary to preserve order, so not in terms of time complexity. 
 """
 
 
